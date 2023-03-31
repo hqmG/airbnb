@@ -1,0 +1,8 @@
+flake8
+ipykernel
+jupyter
+matplotlib
+pandas
+python-dotenv
+scikit-learn
+seaborn
