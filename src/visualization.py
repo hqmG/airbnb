@@ -13,6 +13,7 @@ from typing import Tuple
 def barplot(
     series: pandas.Series,
     max_features: int = 50,
+    log: bool = True,
     figsize: Tuple = (18, 7.5),
 ) -> Tuple[Figure, Axes]:
     """
@@ -21,6 +22,7 @@ def barplot(
     Args:
         series: Data to plot.
         max_features: Maximum number of labels.
+        log: If plotting addition barplot on log scale.
         figsize: Size of figure.
 
     Returns:
@@ -38,19 +40,26 @@ def barplot(
         series = series[:max_features]
 
     # Figure and axes
-    figure, axes = pyplot.subplots(2, 1, figsize=figsize)
+    figure, axes = pyplot.subplots(2 if log else 1, 1, figsize=figsize)
+    if not log:
+        axes = [axes]
 
     # Barplot
     if len(series) > 0:
         axes[0].bar(series.index, series.values, color=color)
     axes[0].set_ylabel('COUNT')
-    axes[0].set_xticklabels([])
+    axes[0].tick_params('x', labelrotation=90)
 
     # Log barplot
-    if len(series) > 0:
-        axes[1].bar(series.index, series.values, log=True, color=color)
-    axes[1].set_ylabel('log(COUNT)')
-    axes[1].tick_params('x', labelrotation=90)
+    if log:
+        if len(series) > 0:
+            axes[1].bar(series.index, series.values, log=True, color=color)
+        axes[1].set_ylabel('log(COUNT)')
+        axes[1].tick_params('x', labelrotation=90)
+
+    # Labels
+    if log:
+        axes[0].set_xticklabels([])
     return figure, axes
 
 
